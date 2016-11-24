@@ -60,11 +60,11 @@
 	   
 	   
                  $scope.arr = [
-                              {"name":"钟林","age":35,"address":"湖北襄阳"},{"name":"兜风","age":100,"address":"湖北武汉"},
-			                  {"name":"风小郑","age":67,"address":"湖北孝感"},{"name":"地方","age":57,"address":"湖北黄冈"},
+                              {"name":"钟林","age":35,"address":"湖北襄阳"},{"name":"麦兜","age":100,"address":"湖北武汉"},
+			                  {"name":"风小郑","age":67,"address":"湖北孝感"},{"name":"蓝胖子","age":57,"address":"湖北黄冈"},
 			                  {"name":"惮烦","age":41,"address":"湖北公安"},{"name":"吴亦凡","age":75,"address":"湖北汉口"},
-			                  {"name":"小凡","age":78,"address":"广东东莞"},{"name":"峰哥","age":25,"address":"湖北十堰"},
-			                  {"name":"南征北战","age":56,"address":"湖北覆盖该方法功夫功夫功夫"},{"name":"哈喽","age":23,"address":"中华人民共和国"}
+			                  {"name":"张小凡","age":78,"address":"广东东莞"},{"name":"峰哥","age":25,"address":"湖北十堰"},
+			                  {"name":"南征北战","age":56,"address":"湖北天门"},{"name":"哈喽","age":23,"address":"中华人民共和国"}
                   ];
 				  $scope.token = sessionStorage.token;
                   //显示弹窗
@@ -93,9 +93,11 @@
                   };
                   // 假  删除数据
                   $scope.deleteInfo = function (ev){
-                      debugger;
                       ev.currentTarget.parentElement.remove();
 
+                  }
+                  $scope.gerenjianli = function (){
+                      window.location.href='gerenjianli.html';
                   }
                  
 
@@ -140,6 +142,7 @@
             </table>
 			<div style="width:800px;">
 			{{token}}
+            <button type="button" class="btn btn-info" ng-click="gerenjianli();">信息按钮</button>
 			</div>
     </div>
 
