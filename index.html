@@ -1,51 +1,162 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Zhonglin728.GitHub.io by zhonglin728</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-dark.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
-  </head>
-  <body>
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/zhonglin728">View On GitHub</a></li>
-        </nav>
-      </div><!-- end header -->
-
-    <div class="wrapper">
-
-      <section>
-        <div id="title">
-          <h1>Zhonglin728.GitHub.io</h1>
-          <p>钟小懒github</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/zhonglin728">zhonglin728</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
-        </div>
-
-        <h1>
-<a id="zhonglin728githubio" class="anchor" href="#zhonglin728githubio" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>zhonglin728.github.io</h1>
-
-<p>钟小懒github</p>
-
-<h1>
-<a id="" class="anchor" href="#" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>##</h1>
-      </section>
-
-    </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.3/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    <script src="https://cdn.bootcss.com/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.3/js/bootstrap.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.3/js/bootstrap.min.js"></script>
     
-  </body>
+    
+    <script>
+	
+	/**获取登录用户的token信息
+	$(function (){
+				$.ajax({
+				url:'http://192.168.6.120:8080/api/v1/authentication',
+				type:'POST', //GET
+				async:true,    //或false,是否异步
+				contentType: "application/json",
+				data:JSON.stringify({'userName':'YAOXINYU001','passwd':'aaaaa888'}),
+				dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+				beforeSend:function(xhr){
+					console.log(xhr)
+					console.log('发送前')
+				},
+				success:function(data,textStatus,jqXHR){
+					sessionStorage.token = data.data;
+					console.log(data.data)
+					console.log(textStatus)
+					console.log(jqXHR)
+				},
+				error:function(xhr,textStatus){
+					console.log('错误')
+					console.log(xhr)
+					console.log(textStatus)
+				},
+				complete:function(){
+					console.log('结束')
+				}
+				
+			})
+	})
+	*/
+	
+       var app = angular.module('bootApp',['ui.bootstrap']);
+       app.controller('bootController',function ($scope,$uibModal,$log,$http){
+	   $http({
+			method:"post",    　　// 可以是get,post,put, delete,head,jsonp;常使用的是get,post
+			url:'http://192.168.6.120:8080/api/v1/authentication', 　　  //请求路径
+			data:{'userName':'YAOXINYU001','passwd':'aaaaa888'} //传递参数，字符串map或对象，转化成？name=lisa形式跟在请求路径后面
+			}).success(function(data){
+				sessionStorage.token = data.data;
+			}).error(function(data){
+				//alert(data);
+			})
+	   
+	   
+                 $scope.arr = [
+                              {"name":"钟林","age":35,"address":"湖北襄阳"},{"name":"兜风","age":100,"address":"湖北武汉"},
+			                  {"name":"风小郑","age":67,"address":"湖北孝感"},{"name":"地方","age":57,"address":"湖北黄冈"},
+			                  {"name":"惮烦","age":41,"address":"湖北公安"},{"name":"吴亦凡","age":75,"address":"湖北汉口"},
+			                  {"name":"小凡","age":78,"address":"广东东莞"},{"name":"峰哥","age":25,"address":"湖北十堰"},
+			                  {"name":"南征北战","age":56,"address":"湖北覆盖该方法功夫功夫功夫"},{"name":"哈喽","age":23,"address":"中华人民共和国"}
+                  ];
+				  $scope.token = sessionStorage.token;
+                  //显示弹窗
+                $scope.myInfo = function (ev){
+                    var msg = new Object();
+                    msg.title = "鼠标所点之处......";
+                    msg.context = ev.target.innerHTML;
+                    var par = {
+                                msgFun: function () {
+                                    return msg;
+                                }
+                            }
+                        var modalInstance = $uibModal.open({
+                        templateUrl: 'myModalContent.html',
+                        controller: 'ModalInstanceCtrl',
+                        backdrop: "static",
+                        animation:true,
+                        size: '',
+                        resolve: par
+                        });
+                        modalInstance.result.then(function (selectedItem) {
+                            $scope.selected = selectedItem;
+                        }, function () {
+                            $log.info('Modal dismissed at: ' + new Date());
+                        });
+                  };
+                  // 假  删除数据
+                  $scope.deleteInfo = function (ev){
+                      debugger;
+                      ev.currentTarget.parentElement.remove();
+
+                  }
+                 
+
+                    
+       });
+
+      // ModalInstanceCtrl 弹窗controller  
+    angular.module('bootApp').controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, msgFun) {
+                $scope.items = msgFun.context;
+                $scope.title = msgFun.title;
+                $scope.ok = function () {
+                    $uibModalInstance.dismiss('cancel');
+                };
+                $scope.cancel = function () {
+                    $uibModalInstance.dismiss('cancel');
+                };
+            });
+    </script>
+
+</head>
+<body ng-app="bootApp">
+
+    <div  ng-controller="bootController">
+            <table class="table table-hover table-bordered" style="margin: 0px auto;width: 1200px;margin-top: 100px;">
+	            <tr>
+	            	<th colspan="5" style="text-align: center;"><h3>Test</h3></th>
+	            </tr>
+                <tr>
+                    <td>序号</td>
+                    <td>姓名</td>
+                    <td>年龄</td>
+                    <td>地址</td>
+                    <td>操作</td>
+                </tr>
+                <tr ng-repeat="a in arr" class="success">
+                    <td ng-click="myInfo($event);">{{$index}}</td>
+                    <td ng-click="myInfo($event);">{{a.name}}</td>
+                    <td ng-click="myInfo($event);">{{a.age}}</td>
+                    <td ng-click="myInfo($event);">{{a.address}}</td>
+                    <td ng-click="deleteInfo($event);"><button type="button" class="btn btn-info">删除</button></td>
+                </tr>
+            </table>
+			<div style="width:800px;">
+			{{token}}
+			</div>
+    </div>
+
+<script type="text/ng-template" id="myModalContent.html">
+            <div ng-model="bootDemo">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{title}}</h4>
+                </div>
+                <div class="modal-body">
+                    {{items}}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="button" ng-click="ok()">确定</button>
+                    <button class="btn btn-warning" type="button" ng-click="cancel()">取消</button>
+                </div>
+            </div>
+</script>
+
+</body>
 </html>
