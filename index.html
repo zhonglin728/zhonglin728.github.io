@@ -46,7 +46,16 @@
 			})
 	})
 	*/
-	
+	$(function (){
+		$("img").rotate({ 
+					      angle:0, 
+					      animateTo:360, 
+					      callback: rotation, 
+						easing: function (x,t,b,c,d){      
+						      return (t/d)*c ; 
+					     } 
+				      }); 
+		});
        var app = angular.module('bootApp',['ui.bootstrap']);
        app.controller('bootController',function ($scope,$uibModal,$log,$http){
 	   $http({
