@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    
+    <script type="text/javascript" src="js/angular.min.js"></script>
+    <script src="https://cdn.bootcss.com/angular-i18n/1.6.0-rc.1/angular-locale_zh-cn.min.js"></script>
+    <script src="https://cdn.bootcss.com/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.js"></script>
+    <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.3/css/bootstrap.min.css" rel="stylesheet">
+    
+    
+    <script>
+       var app = angular.module('bootApp',['ui.bootstrap']);
+       app.controller('DatepickerPopupDemoCtrl',function ($scope){
+            $scope.name = '钟林';
+            $scope.dat = new Date();
+             $scope.format = "yyyy/MM/dd HH:mm:ss";
+             $scope.altInputFormats = ['yyyy/M!/d!'];
+             $scope.popup1 = {
+                 opened: false
+             };
+             $scope.open1 = function () {
+                 $scope.popup1.opened = true;
+             };
+       });
+
+    
+    </script>
+
+</head>
+<body ng-app="bootApp">
+   <div ng-controller="DatepickerPopupDemoCtrl">
+         <p class="form-group">
+             <div class="input-group" style="margin-left:400px;">
+                 <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dat" is-open="popup1.opened" ng-required="true" close-text="关闭"
+                        clear-text="清空" current-text="今天" alt-input-formats="altInputFormats" style="width:200px"/>
+                     <button type="button" class="btn btn-info" ng-click="open1()">angular时间控件<i class="glyphicon glyphicon-calendar"></i></button>
+                 
+             </div>
+         </p>
+     </div>
+
+
+</body>
+</html>
