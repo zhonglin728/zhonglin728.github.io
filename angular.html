@@ -13,7 +13,6 @@
     <script>
        var app = angular.module('bootApp',['ui.bootstrap']);
        app.controller('DatepickerPopupDemoCtrl',function ($scope){
-            $scope.name = '钟林';
             $scope.dat = new Date();
              $scope.format = "yyyy/MM/dd HH:mm:ss";
              $scope.altInputFormats = ['yyyy/M!/d!'];
@@ -25,22 +24,81 @@
              };
        });
 
+       app.directive('datepickerPopup',function (){
+           return {
+               restrict:'E',
+               //template:'<h3>钟林<h3>',
+               //templateUrl:'tmp/datepicker.html',
+               controller:function ($scope,$element){
+                   console.log("controller---");
+               },
+               link:function (scope,element,attr){
+                            scope.popup1 = {
+                                            opened: false
+                                        };
+                            scope.open1 = function () {
+                                $scope.popup1.opened = true;
+                            };
+                    console.log("link---");
+               },
+               compile:function (element,attributes){
+                   return {
+                       pre:function preLink(scope,element,attributes){
+                           var html = angular.element(document.querySelector("#timeDiv")).html();
+                           element.append(html);
+                           scope.name = 'dddfdf';
+                           scope.dat = new Date();
+                            scope.format = "yyyy/MM/dd HH:mm:ss";
+                            scope.altInputFormats = ['yyyy/M!/d!'];
+                           //scope.$apply()
+                           console.log("compile pre---");
+                       },
+                       post:function postLink(scope,element,attributes){
+                            console.log("compile post---");
+                       }
+                   };
+               }
+           }
+       });
+
+
     
     </script>
 
 </head>
+
 <body ng-app="bootApp">
+
+    
    <div ng-controller="DatepickerPopupDemoCtrl">
-         <p class="form-group">
+         <!--<p class="form-group">
              <div class="input-group" style="margin-left:400px;">
                  <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dat" is-open="popup1.opened" ng-required="true" close-text="关闭"
                         clear-text="清空" current-text="今天" alt-input-formats="altInputFormats" style="width:200px"/>
                      <button type="button" class="btn btn-info" ng-click="open1()">angular时间控件<i class="glyphicon glyphicon-calendar"></i></button>
                  
              </div>
-         </p>
+         </p>-->
+         {{name}}
+
+            <div id='timeDiv' style="display:none;">
+            <p class="form-group">
+                <div class="input-group" style="margin-left:400px;">
+                    
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dat" is-open="popup1.opened" ng-required="true" close-text="关闭"
+                            clear-text="清空" current-text="今天" alt-input-formats="altInputFormats" style="width:200px"/>
+                        <button type="button" class="btn btn-info" ng-click="open1()">angular时间控件<i class="glyphicon glyphicon-calendar"></i></button>
+                    
+                </div>
+            </p>
+            </div>
+
      </div>
 
+
+ 
+
+    <datepicker-popup></datepicker-popup>
 
 </body>
 </html>
