@@ -14,15 +14,15 @@
        var app = angular.module('bootApp',['ui.bootstrap']);
 
 
-    //    app.controller('DatepickerPopupDemoCtrl',function ($scope){
-    //          $scope.dat = new Date();
-    //          $scope.format = "yyyy/MM/dd HH:mm:ss";
-    //          $scope.altInputFormats = ['yyyy/M!/d!'];
-    //          $scope.popup1 = {opened: false};
-    //          $scope.open1 = function () {
-    //              $scope.popup1.opened = true;
-    //          };
-    //    });
+       app.controller('DatepickerPopupDemoCtrl',function ($scope){
+             $scope.dat = new Date();
+             $scope.format = "yyyy/MM/dd HH:mm:ss";
+             $scope.altInputFormats = ['yyyy/M!/d!'];
+             $scope.popup1 = {opened: false};
+             $scope.open1 = function () {
+                 $scope.popup1.opened = true;
+             };
+       });
 
 
 
@@ -75,28 +75,28 @@
 <body ng-app="bootApp">
 
     
-//    <div ng-controller="DatepickerPopupDemoCtrl">
-//          <p class="form-group">
-//              <div class="input-group" style="margin-left:400px;">
-//                  <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dat" is-open="popup1.opened" ng-required="true" close-text="关闭"
-//                         clear-text="清空" current-text="今天" alt-input-formats="altInputFormats" style="width:200px"/>
-//                      <button type="button" class="btn btn-info" ng-click="open1()">angular时间控件<i class="glyphicon glyphicon-calendar"></i></button>
-//              </div>
-//          </p>
-//      </div>
+   <div ng-controller="DatepickerPopupDemoCtrl">
+         <p class="form-group">
+             <div class="input-group" style="margin-left:400px;">
+                 <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dat" is-open="popup1.opened" ng-required="true" close-text="关闭"
+                        clear-text="清空" current-text="今天" alt-input-formats="altInputFormats" style="width:200px"/>
+                     <button type="button" class="btn btn-info" ng-click="open1()">angular时间控件<i class="glyphicon glyphicon-calendar"></i></button>
+             </div>
+         </p>
+     </div>
 
 
-
-//  <div id='timeDiv' style="display:none;"> {{name}}
-//             <p class="form-group">
-//                 <div class="input-group" style="margin-left:400px;">
-//                     <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dat" is-open="popup1.opened" ng-required="true" close-text="关闭"
-//                             clear-text="清空" current-text="今天" alt-input-formats="altInputFormats" style="width:200px"/>
-//                         <button type="button" class="btn btn-info" ng-click="open1()">angular时间控件<i class="glyphicon glyphicon-calendar"></i></button>
-//                 </div>
-//             </p>
-//  </div>
-
+<!--
+ <div id='timeDiv' style="display:none;"> {{name}}
+            <p class="form-group">
+                <div class="input-group" style="margin-left:400px;">
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dat" is-open="popup1.opened" ng-required="true" close-text="关闭"
+                            clear-text="清空" current-text="今天" alt-input-formats="altInputFormats" style="width:200px"/>
+                        <button type="button" class="btn btn-info" ng-click="open1()">angular时间控件<i class="glyphicon glyphicon-calendar"></i></button>
+                </div>
+            </p>
+ </div>
+-->
 
     <datepicker-popup></datepicker-popup>
 
