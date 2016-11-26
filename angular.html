@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html  xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -12,22 +11,6 @@
     
     <script>
        var app = angular.module('bootApp',['ui.bootstrap']);
-
-
-       app.controller('DatepickerPopupDemoCtrl',function ($scope){
-             $scope.dat = new Date();
-             $scope.format = "yyyy/MM/dd HH:mm:ss";
-             $scope.altInputFormats = ['yyyy/M!/d!'];
-             $scope.popup1 = {opened: false};
-             $scope.open1 = function () {
-                 $scope.popup1.opened = true;
-             };
-       });
-
-
-
-
-
        //已指令的形式加载time控件
        app.directive('datepickerPopup',function (){
            return {
@@ -48,7 +31,7 @@
                            //设置组件参数
                             scope.name = 'ddddfdfdfdfdfdfdfdfdffdf';
                             scope.dat = new Date();
-                            scope.format = "yyyy/MM/dd HH:mm:ss";
+                            scope.format = attributes.formt;
                             scope.altInputFormats = ['yyyy/M!/d!'];
                             scope.popup1 = {opened: false};
                             scope.open1 = function () {
@@ -72,7 +55,7 @@
 
 <body ng-app="bootApp">
 
-    <datepicker-popup></datepicker-popup>
+    <datepicker-popup formt='yyyy/MM/dd HH:mm:ss'></datepicker-popup>
 
 </body>
 </html>
