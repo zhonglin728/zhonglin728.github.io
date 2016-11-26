@@ -2,20 +2,37 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
     <script type="text/javascript" src="js/angular.min.js"></script>
     <script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
     <script src="https://cdn.bootcss.com/angular-i18n/1.6.0-rc.1/angular-locale_zh-cn.min.js"></script>
     <script src="https://cdn.bootcss.com/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.js"></script>
-    <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.3/css/bootstrap.min.css" rel="stylesheet">
-    
-    
+    <style>
+        @font-face
+        {
+            font-family: myFirstFont;
+            src: url(sansation_light.woff);
+        }
+
+        @font-face
+        {
+            font-family: myFirstFont;
+            src: url(sansation_bold.woff);
+            font-weight:bold;
+        }
+        .back{
+            font-family:myFirstFont;
+            background-color: rgba(84, 30, 111, 0.2)
+        }
+    </style>
     <script>
        var app = angular.module('bootApp',['ui.bootstrap']);
        //已指令的形式加载time控件
        app.directive('datepickerPopup',function (){
            return {
-               restrict:'E',
-               templateUrl:'tmp/datepicker.html',
+               restrict:'AE',
+               //templateUrl:'./tmp/datepicker.html',
+               template:angular.element(document.querySelector("#timeDiv")).html(),
                controller:function ($scope,$element){
                    console.log("controller---");
                },
@@ -29,14 +46,17 @@
                        },
                        post:function postLink(scope,element,attributes){
                            //设置组件参数
-                            scope.name = 'ddddfdfdfdfdfdfdfdfdffdf';
                             scope.dat = new Date();
                             scope.format = attributes.formt;
                             scope.altInputFormats = ['yyyy/M!/d!'];
                             scope.popup1 = {opened: false};
                             scope.open1 = function () {
+                                element.bind('click',function(){  //根据项目的主题分格 颜色保持一致即可！ 这里随便改了个颜色。默认应该是白色的！
+                                    angular.element(document.querySelector("ul")).addClass('back');
+                                });
                                 scope.popup1.opened = true;
                             };
+                           
                             //scope.$apply();
                             console.log("compile post---");
                        }
@@ -55,7 +75,25 @@
 
 <body ng-app="bootApp">
 
-    <datepicker-popup formt='yyyy/MM/dd HH:mm:ss'></datepicker-popup>
+
+
+   <datepicker-popup formt='yyyy/MM/dd HH:mm:ss'></datepicker-popup>
+
+
+
+  <!--模版文件HTML-->
+  <div id="timeDiv" style="display:none;margin-left:400px;">
+         <p class="form-group">
+             <div class="input-group">
+                <input type="text" class="form-control" uib-datepicker-popup="{{format}}" 
+                        ng-model="dat" is-open="popup1.opened" ng-required="true" close-text="关闭"
+                        clear-text="清空" current-text="今天" alt-input-formats="altInputFormats"/>
+                     <button type="button" class="btn btn-info" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+             </div>
+         </p>
+    </div>
+
+
 
 </body>
 </html>
