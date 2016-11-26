@@ -46,15 +46,13 @@
                            //调用模版append   ＨＴＭＬ
                            //var html = angular.element(document.querySelector("#timeDiv")).html();
                            //element.append(html);
-                           scope.name = 'ddddfdfdfdfdfdfdfdfdffdf';
-                           scope.dat = new Date();
+                            scope.name = 'ddddfdfdfdfdfdfdfdfdffdf';
+                            scope.dat = new Date();
                             scope.format = "yyyy/MM/dd HH:mm:ss";
                             scope.altInputFormats = ['yyyy/M!/d!'];
-                            scope.popup1 = {
-                                            opened: false
-                                        };
+                            scope.popup1 = {opened: false};
                             scope.open1 = function () {
-                                $scope.popup1.opened = true;
+                                scope.popup1.opened = true;
                             };
                             //scope.$apply();
                             console.log("compile post---");
