@@ -38,6 +38,9 @@
                    console.log("controller---");
                },
                link:function (scope,element,attr){
+                   element.bind('click',function(){  
+                       alert("h");
+                                });
                     console.log("link---");
                },
                compile:function (element,attributes){
@@ -53,7 +56,8 @@
                             scope.popup1 = {opened: false};
                             scope.open1 = function () {
                                 element.bind('click',function(){  //根据项目的主题分格 颜色保持一致即可！ 这里随便改了个颜色。默认应该是白色的！
-                                    angular.element(document.querySelector("ul")).addClass('back');
+                                    //angular.element(document.querySelector("ul")).addClass('back');
+                                    element.find("ul").addClass('back');
                                 });
                                 scope.popup1.opened = true;
                             };
@@ -87,7 +91,7 @@
                 <input type="text" class="form-control" uib-datepicker-popup="{{format}}" 
                         ng-model="dat" is-open="popup1.opened" ng-required="true" close-text="关闭"
                         clear-text="清空" current-text="今天" alt-input-formats="altInputFormats"/>
-                     <button type="button" class="btn btn-info" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                     <button type="button" class="btn btn-info" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>{{dat}}
              </div>
          </p>
     </div>
