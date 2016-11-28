@@ -23,7 +23,7 @@
         }
         .back{
             font-family:myFirstFont;
-            background-color: rgba(84, 30, 111, 0.2)
+            background-color:#FC6907
         }
     </style>
     <script>
@@ -34,11 +34,21 @@
                restrict:'AE',
                //templateUrl:'./tmp/datepicker.html',
                template:angular.element(document.querySelector("#timeDiv")).html(),
-               scope:{
-
-               },
-               controller:function ($scope,$element){
-                   console.log("controller---");
+               scope: true,
+               controller:function ($scope,$element,$compile,$http,$attrs,$log){
+                   var vm = $scope.$parent.vm;
+				   //设置组件参数
+                    $scope.dat = new Date();
+                    $scope.format = $attrs.formt;
+                    $scope.altInputFormats = ['yyyy/M!/d!'];
+                    $scope.popup1 = {opened: false};
+                    $scope.open1 = function (){
+                    $element.bind('click',function(){ //根据项目的主题分格 颜色保持一致即可！ 这里随便改了个颜色。默认应该是白色的！
+                            $element.find("ul").addClass('back');
+                        });
+                            $scope.popup1.opened = true;
+                    };
+				   console.log("controller---");
                },
                compile:function (element,attributes){
                    return {
@@ -46,18 +56,6 @@
                            console.log("compile pre---");
                        },
                        post:function postLink(scope,element,attributes){
-                           //设置组件参数
-                            scope.dat = new Date();
-                            scope.format = attributes.formt;
-                            scope.altInputFormats = ['yyyy/M!/d!'];
-                            scope.popup1 = {opened: false};
-                            scope.open1 = function () {
-                                element.bind('click',function(){  //根据项目的主题分格 颜色保持一致即可！ 这里随便改了个颜色。默认应该是白色的！
-                                    //angular.element(document.querySelector("ul")).addClass('back');
-                                    element.find("ul").addClass('back');
-                                });
-                                scope.popup1.opened = true;
-                            };
                             console.log("compile post---");
                        }
                    };
@@ -80,8 +78,8 @@
 
 
 
-   <datepicker-popup formt='yyyy/MM/dd HH:mm:ss'></datepicker-popup>
-
+<!--<datepicker-popup formt='yyyy/MM/dd HH:mm:ss'></datepicker-popup>-->
+<datepicker-popup formt='yyyy/MM/dd'></datepicker-popup>
 
 
   <!--模版文件HTML-->
