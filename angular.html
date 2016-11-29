@@ -36,7 +36,7 @@
                //templateUrl:'./tmp/datepicker.html',
                template:angular.element(document.querySelector("#timeDiv")).html(),
                scope: true,
-               controller:function ($scope,$element,$compile,$http,$attrs,$log){
+               controller:function ($scope,$element,$compile,$http,$attrs,$log,$filter){
                    var vm = $scope.$parent.vm;
 				   //设置组件参数
                     $scope.dat = new Date();
@@ -46,6 +46,7 @@
                     $scope.open1 = function (){
                     $element.bind('click',function(){ //根据项目的主题分格 颜色保持一致即可！ 这里随便改了个颜色。默认应该是白色的！这里是黑科技修改，实际应用应该是修改源码CSS
                             $element.find("ul").addClass('back');
+                            var formatDate = $filter('date')($scope.dat, 'yyyy-MM-dd HH:mm:ss');
                         });
                             $scope.popup1.opened = true;
                     };
@@ -66,7 +67,47 @@
                }
            }
        });
-
+     //
+       app.directive('selectPopup',function ($filter){
+           return {
+               restrict:'AE',
+               //templateUrl:'./tmp/datepicker.html',
+               template:angular.element(document.querySelector("#selectDiv")).html(),
+               scope: true,
+               controller:function ($scope,$element,$compile,$http,$attrs,$log){
+                    
+               },
+               compile:function (element,attributes){
+                   return {
+                       pre:function preLink(scope,element,attributes){
+                          
+                       },
+                       post:function postLink(scope,element,attributes){
+                           var names = ['a','b','c','d','e','f','abc','ade','ef'];
+                           element.bind("keyup",function (){
+                                var userName = scope.userName;
+                                scope.tmp = $filter('filter')(names,userName);   
+                                console.log(scope.tmp);  
+                                angular.element(document.querySelectorAll("#selectUl")).remove();
+                                if(''!=scope.userName){
+                                     var html1 = '<div id="selectUl" style="width:200;"><ul>';
+                                     var html2 = '';
+                                     angular.forEach(scope.tmp,function (n,i){
+                                         html2 = ('<li>'+n+'</li>') + html2;
+                                    })
+                                    var html3 = '</ul></div>';
+                                    element.append((html1+html2+html3));
+                                }
+                           })
+                           
+                       }
+                   };
+               },
+            link:function (scope,element,attr){
+                   
+               }
+           }
+       });
 
 
 
@@ -77,25 +118,33 @@
 
 <body ng-app="bootApp">
 
+       
+<datepicker-popup formt='yyyy/MM/dd HH:mm:ss'></datepicker-popup>
+<select-popup></select-popup>
 
-
-<!--<datepicker-popup formt='yyyy/MM/dd HH:mm:ss'></datepicker-popup>-->
-<datepicker-popup formt='yyyy/MM/dd'></datepicker-popup>
-
-
-  <!--模版文件HTML-->
-  <div id="timeDiv" style="display:none;margin-left:400px;">{{name}}
+  <!--模版文件time HTML-->
+  <div id="timeDiv" style="display:none;">
          <p class="form-group">
-             <div class="input-group">
-                <input type="text" class="form-control" uib-datepicker-popup="{{format}}" 
-                        ng-model="dat" is-open="popup1.opened" ng-required="true" close-text="关闭"
-                        clear-text="清空" current-text="今天" alt-input-formats="altInputFormats"/>
-                     <button type="button" class="btn btn-info" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>{{dat}}
+             <div class="input-group" style="margin-left:400px;">
+                <input type="text" class="form-control" 
+				uib-datepicker-popup="{{format}}" 
+                ng-model="dat" 
+				is-open="popup1.opened" 
+				ng-required="true" 
+				close-text="关闭"
+                clear-text="清空" 
+				current-text="今天"
+				datepicker-append-to-body=false
+				datepicker-options ={'yearRows':4,'yearColumns':5}
+				alt-input-formats="altInputFormats"/>
+               <button type="button" class="btn btn-info" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>{{dat | date:'yyyy-MM-dd HH:mm:ss'}}
              </div>
          </p>
+  </div>
+  <!--模板文件Select HTMl-->
+    <div id="selectDiv" style="display:none;">
+        <input class="form-control" id="userName" type="text" ng-model="userName" style="width:200px;"/>
     </div>
-
-
 
 </body>
 </html>
