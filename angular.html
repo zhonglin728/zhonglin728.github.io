@@ -92,6 +92,7 @@
                template:angular.element(document.querySelector("#selectDiv")).html(),
                scope: true,
                controller:function ($scope,$element,$http,$attrs,$log){
+			  
                     
                },
                compile:function (element,attributes){
@@ -101,7 +102,10 @@
                        },
                        post:function postLink(scope,element,attributes){
                            var names = ['a','b','c','d','e','f','abc','ade','ef'];
-                           element.bind("keyup",function (){
+                           element.bind("keyup",function (ev){
+								if(event.keyCode == 40){
+									alert('按了下键');
+								}
                                 var userName = scope.userName;
                                 scope.tmp = $filter('filter')(names,userName);   
                                 console.log(scope.tmp);  
@@ -124,6 +128,7 @@
                                //清空下拉框div
                                angular.element(document.querySelectorAll("#selectUl")).remove();
                            }
+						   
                        }
                    };
                },
