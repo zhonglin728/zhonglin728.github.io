@@ -43,6 +43,9 @@
          #selectUl ul li:hover{
            background:#F7F7F7;
         }
+        .downLi{
+            background:#5BC0DE; 
+        }
     </style>
     <script>
        var app = angular.module('bootApp',['ui.bootstrap']);
@@ -101,26 +104,64 @@
                           
                        },
                        post:function postLink(scope,element,attributes){
-                           var names = ['a','b','c','d','e','f','abc','ade','ef'];
+                           var names = ['a','b','c','d','e','f','abc','ade','ef','adf','aer','acv'];
+                           var flag = 0;
                            element.bind("keyup",function (ev){
-								if(event.keyCode == 40){
-									alert('按了下键');
-								}
-                                var userName = scope.userName;
-                                scope.tmp = $filter('filter')(names,userName);   
-                                console.log(scope.tmp);  
-                                angular.element(document.querySelectorAll("#selectUl")).remove();
-                                if(''!=scope.userName){
-                                     var html1 = '<div id="selectUl"><ul>';
-                                     var html2 = '';
-                                     angular.forEach(scope.tmp,function (n,i){
-                                         html2 = ('<li ng-click="sel($event);">'+n+'</li>') + html2;
-                                    })
-                                    var html3 = '</ul></div>';
-                                    var tpl = $compile(html1+html2+html3)(scope);//动态的事件绑定
-                                    element.append(tpl);
-                                }
-                           })//点击li事件
+                               var li = angular.element(document.querySelectorAll("#selectUl ul li"));
+                               if(event.keyCode != 40 && event.keyCode !=38 && event.keyCode !=13){
+                                    var userName = scope.userName;
+                                    scope.tmp = $filter('filter')(names,userName);   
+                                    console.log(scope.tmp);  
+                                    angular.element(document.querySelectorAll("#selectUl")).remove();
+                                    if(''!=scope.userName){
+                                        var html1 = '<div id="selectUl"><ul>';
+                                        var html2 = '';
+                                        angular.forEach(scope.tmp,function (n,i){
+                                            html2 = ('<li ng-click="sel($event);">'+n+'</li>') + html2;
+                                        })
+                                        var html3 = '</ul></div>';
+                                        var tpl = $compile(html1+html2+html3)(scope);//动态的事件绑定
+                                        element.append(tpl);
+                                    }
+                               }else if(event.keyCode == 40){//键盘下 方向键控制下拉数据下移
+                                   if(flag<li.length){
+                                        angular.forEach(li,function(n,i){
+                                             if(angular.element(n).attr('active')=='true'){
+                                                angular.element(n).removeAttr('active').removeClass('downLi');
+                                            }
+                                        })
+                                        if(li.eq(flag).attr('last')=='true'){//如果按到第二圈了 那么eq 元素第一个跳过，进行下一个li的着色
+                                            flag++;
+                                        }
+                                        li.eq(flag).attr('active','true').addClass('downLi');//li标记active 并着色
+                                        flag++;
+                                   }else{
+                                       angular.element(li).eq(li.length-1).removeAttr('active').removeClass('downLi');
+                                       angular.element(li).eq(0).attr('active','true').attr('last','true').addClass('downLi');//标记第二圈开始
+                                       flag = 0;
+                                   }
+                                   
+                               }else if(event.keyCode == 38){//键盘上   方向键控制下拉数据上移。。。 没有实现 太繁琐了 写完估计会疯掉  啊哈哈哈
+
+                               }else if(event.keyCode == 13){//回车键事件 选中值 清空下拉框
+                                  angular.forEach(li,function(n,i){
+                                      if(angular.element(n).attr('active')=='true'){
+                                          //赋值给Input
+                                          var enterVal = angular.element(n).html();
+                                          scope.userName = enterVal;
+                                          //清空下拉框div
+                                          angular.element(document.querySelectorAll("#selectUl")).remove();
+                                         
+                                      }
+                                  })
+                                  scope.$apply();
+                                  
+                               }
+							  
+                                console.log(flag);
+                           })
+
+                           //点击li事件
                            scope.sel = function (ev){
                                //改变input的值
                                var val = angular.element(ev.target).html();
@@ -147,14 +188,20 @@
 
 <body ng-app="bootApp">
 
-       
+ <hr/>bootstarp+angular 时间控件
 <datepicker-popup formt='yyyy/MM/dd HH:mm:ss'></datepicker-popup>
+  <hr/>下拉框控件支持自动筛选数据  比如输入a将可以看到筛选效果 支持鼠标选择下拉数据 以及方向键控住选择数据
 <select-popup></select-popup>
+
+<div style="margin-top:500px;text-align: center;background-color: #9E9E8B;">作者QQ:717543275  小白一枚 纯手写 凭感觉 很多地方有待优化  不喜勿喷 啊哈哈</div>
+
+
+
 
   <!--模版文件time HTML-->
   <div id="timeDiv" style="display:none;">
          <p class="form-group">
-             <div class="input-group" style="margin-left:400px;">
+             <div class="input-group">
                 <input type="text" class="form-control" 
 				uib-datepicker-popup="{{format}}" 
                 ng-model="dat" 
@@ -170,10 +217,14 @@
              </div>
          </p>
   </div>
+
   <!--模板文件input  HTMl-->
-    <div id="selectDiv" style="display:none;">
-        <input class="form-control" id="userName" type="text" ng-model="userName" style="width:200px;"/>
+    <div id="selectDiv" style="display:none;margin-left:400px">
+        <input class="form-control" id="userName" type="text" ng-model="userName" style="width:200px;"/>{{flag}}
     </div>
+
+
+
 
 </body>
 </html>
