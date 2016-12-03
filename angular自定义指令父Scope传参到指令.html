@@ -32,12 +32,24 @@
 
             // })
             //'http://baike.baidu.com/api/openapi/BaikeLemmaCardApi?scope=103&format=json&appid=379020&bk_key=周杰伦&bk_length=600'
-            $http.get('http://baike.baidu.com/api/openapi/BaikeLemmaCardApi?scope=103&format=json&appid=379020&bk_key=周杰伦&bk_length=600&languageColumn=name_eu').success(function (data){
+            // $http.get('http://baike.baidu.com/api/openapi/BaikeLemmaCardApi?scope=103&format=json&appid=379020&bk_key=周杰伦&bk_length=600&languageColumn=name_eu').success(function (data){
 
-            }).error(function (err){
-                $scope.result = err;
-            })
-
+            // }).error(function (err){
+            //     $scope.result = err;
+            // })
+            //时间日历空间
+            var popup1 = false;
+            $scope.dt = new Date();
+            $scope.open1 = function (ev){
+                    $scope.popup1 = true;
+            }
+            //小时空控件
+            $scope.mytime = new Date();
+            $scope.hstep = 1;
+            $scope.mstep = 1;
+            $scope.ismeridian = true;
+            
+            //
             
         })
         .directive('showMsg',function(){
@@ -66,14 +78,37 @@
 <body ng-app="bootApp">
 
     <div ng-controller="msgController">
-        <input type="text" ng-model="msg" />{{msg}}
+        <!--<input type="text" ng-model="msg" />{{msg}}
         <p msg-date='{{msg}}' show-msg='123'></p>
 
 
         <input type="text" ng-model="baikeName" />
-        <textarea>{{result}}</textarea>
-    </div>
+        <textarea>{{result}}</textarea>-->
+    
+ 
 
+  <h4>Popup</h4>
+    <div class="row">
+      <div class="col-md-6">
+        <p class="input-group">
+          <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+      </div>
+    </div>
+<hr>
+
+<div uib-timepicker ng-model="mytime" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
+{{mytime | date:'HH:mm'}}
+ 
+
+
+
+
+
+</div>
 </body>
 
 </html>
