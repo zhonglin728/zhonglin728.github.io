@@ -48,15 +48,13 @@
                     msgs:'@msgDate'//自定义属性msg-date
                 },
                 controller:function($scope,$element,$attrs){
-                   
                     $scope.ickt = 'ickt';
                    // $scope.$apply();
                 },
                 link: function(s, e, a) {
-                    e.bind('click', function() {
+                  e.bind('click', function() {
                         alert(s.msgs);
-                        
-                    });
+                    }); 
                 }
             }
         })

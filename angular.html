@@ -10,25 +10,11 @@
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"></link>
     <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css" />
     <style>
-        @font-face
-        {
-            font-family: myFirstFont;
-            src: url(sansation_light.woff);
-        }
-
-        @font-face
-        {
-            font-family: myFirstFont;
-            src: url(sansation_bold.woff);
-            font-weight:bold;
-        }
+     
         .back{
-            font-family:myFirstFont;
+            /*font-family:Arial, Helvetica, sans-serif; */
             background-color:#56CE19
-        }
-
-
-        
+        }   
         #selectUl{
             border: 1px solid #CCC;
             border-radius: 5px;
@@ -50,7 +36,7 @@
     <script>
        var app = angular.module('bootApp',['ui.bootstrap']);
        //已指令的形式加载time控件
-       app.directive('datepickerPopup',function (){
+       app.directive('datepickerPopup',function ($filter){
            return {
                restrict:'AE',
                //templateUrl:'./tmp/datepicker.html',
@@ -64,26 +50,16 @@
                     $scope.altInputFormats = ['yyyy/M!/d!'];
                     $scope.popup1 = {opened: false};
                     $scope.open1 = function (){
-                    $element.bind('click',function(){ //根据项目的主题分格 颜色保持一致即可！ 这里随便改了个颜色。默认应该是白色的！这里是黑科技修改，实际应用应该是修改源码CSS
-                            $element.find("ul").addClass('back');
-                            var formatDate = $filter('date')($scope.dat, 'yyyy-MM-dd HH:mm:ss');
-                        });
-                            $scope.popup1.opened = true;
+                        $scope.popup1.opened = true;
                     };
 				   console.log("controller---");
                },
-               compile:function (element,attributes){
-                   return {
-                       pre:function preLink(scope,element,attributes){
-                           console.log("compile pre---");
-                       },
-                       post:function postLink(scope,element,attributes){
-                            console.log("compile post---");
-                       }
-                   };
-               },
-            link:function (scope,element,attr){
-                    console.log("link---");
+              link:function (scope,element,attr){
+                     element.bind('click',function(){//根据项目的主题分格 颜色保持一致即可！ 这里随便改了个颜色。默认应该是白色的！这里是黑科技修改，实际应用应该是修改源码CSS
+                            element.find("ul").addClass('back');
+                            var formatDate = $filter('date')(scope.dat, 'yyyy-MM-dd HH:mm:ss');
+                            console.log('捕捉到点击事件值是：'+formatDate);
+                        });
                }
            }
        });
@@ -95,16 +71,10 @@
                template:angular.element(document.querySelector("#selectDiv")).html(),
                scope: true,
                controller:function ($scope,$element,$http,$attrs,$log){
-			  
                     
                },
-               compile:function (element,attributes){
-                   return {
-                       pre:function preLink(scope,element,attributes){
-                          
-                       },
-                       post:function postLink(scope,element,attributes){
-                           var names = ['a','b','c','d','e','f','abc','ade','ef','adf','aer','acv'];
+               link:function (scope,element,attr){
+                           var names = ['a','b','c','d','e','f','abc','ade','ef','adf','aer','acv','aaa','ab','ae','ag'];
                            var flag = 0;
                            element.bind("keyup",function (ev){
                                var li = angular.element(document.querySelectorAll("#selectUl ul li"));
@@ -120,7 +90,7 @@
                                             html2 = ('<li ng-click="sel($event);">'+n+'</li>') + html2;
                                         })
                                         var html3 = '</ul></div>';
-                                        var tpl = $compile(html1+html2+html3)(scope);//动态的事件绑定
+                                        var tpl = $compile(html1+html2+html3)(scope);//再次编译   为动态的事件绑定
                                         element.append(tpl);
                                     }
                                }else if(event.keyCode == 40){//键盘下 方向键控制下拉数据下移
@@ -141,7 +111,7 @@
                                        flag = 0;
                                    }
                                    
-                               }else if(event.keyCode == 38){//键盘上   方向键控制下拉数据上移。。。 没有实现 太繁琐了 写完估计会疯掉  啊哈哈哈
+                               }else if(event.keyCode == 38){//键盘上   方向键控制下拉数据上移。。。 没有写完  太繁琐了麻痹写完估计会疯掉  啊哈哈哈 老铁们有空了可以接着写！
 
                                }else if(event.keyCode == 13){//回车键事件 选中值 清空下拉框
                                   angular.forEach(li,function(n,i){
@@ -154,13 +124,11 @@
                                          
                                       }
                                   })
-                                  scope.$apply();
-                                  
+                                  scope.$apply();  
                                }
 							  
                                 console.log(flag);
-                           })
-
+                           });
                            //点击li事件
                            scope.sel = function (ev){
                                //改变input的值
@@ -168,14 +136,11 @@
                                scope.userName = val;
                                //清空下拉框div
                                angular.element(document.querySelectorAll("#selectUl")).remove();
-                           }
-						   
-                       }
-                   };
-               },
-            link:function (scope,element,attr){
-                   
-               }
+                           };
+                         element.bind("click",function (ev){
+                                   console.log('捕获到模版文件的-点击事件当前的值是----'+angular.element(ev.target).val());
+                         });
+                }
            }
        });
 
@@ -190,11 +155,13 @@
 
  <hr/>bootstarp+angular 时间控件
 <datepicker-popup formt='yyyy/MM/dd HH:mm:ss'></datepicker-popup>
+
+
   <hr/>下拉框控件支持自动筛选数据  比如输入a将可以看到筛选效果 支持鼠标选择下拉数据 以及方向键控住选择数据
 <select-popup></select-popup>
 
-
-<div style="margin-top:500px;text-align: center;background-color: #9E9E8B;">作者QQ:717543275  小白一枚 纯手写 凭感觉 很多地方有待优化  不喜勿喷 啊哈哈</div>
+<hr/>
+<div style="margin-top:400px;text-align: center;background-color: #9E9E8B;">作者QQ:717543275  小白一枚 纯手写 凭感觉 很多地方有待优化  不喜勿喷 啊哈哈</div>
 
 
 
