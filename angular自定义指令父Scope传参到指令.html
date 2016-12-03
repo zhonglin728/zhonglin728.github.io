@@ -1,4 +1,4 @@
-<html  xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
@@ -12,17 +12,33 @@
     
     <script>
         var app = angular.module('bootApp',['ui.bootstrap']);
-        app.controller('msgController',function ($scope){
+        app.controller('msgController',function ($scope,$http){
             $scope.msg = '哈哈哈哈 ';//父Scope定义msg
-            $scope.$watch('msg',function(newVal,oldVal){//监视msg的变化
-                            if(newVal==oldVal){
-                                console.log('两个值相等');
-                                return;
-                            }
-                            $scope.msg = newVal;
-                            console.log(newVal+'----'+oldVal);
+            // $scope.$watch('msg',function(newVal,oldVal){//监视msg的变化
+            //                 if(newVal==oldVal){
+            //                     console.log('两个值相等');
+            //                     return;
+            //                 }
+            //                 $scope.msg = newVal;
+            //                 console.log(newVal+'----'+oldVal);
+            // })
+            
+            // $http({
+            //     method:'get',
+            //     url:''
+            // }).success(data,function(){
+            //     $scope.result = data;
+            // }).error(err,function(){
+
+            // })
+            //'http://baike.baidu.com/api/openapi/BaikeLemmaCardApi?scope=103&format=json&appid=379020&bk_key=周杰伦&bk_length=600'
+            $http.get('http://baike.baidu.com/api/openapi/BaikeLemmaCardApi?scope=103&format=json&appid=379020&bk_key=周杰伦&bk_length=600&languageColumn=name_eu').success(function (data){
+
+            }).error(function (err){
+                $scope.result = err;
             })
-           
+
+            
         })
         .directive('showMsg',function(){
             return{
@@ -54,6 +70,10 @@
     <div ng-controller="msgController">
         <input type="text" ng-model="msg" />{{msg}}
         <p msg-date='{{msg}}' show-msg='123'></p>
+
+
+        <input type="text" ng-model="baikeName" />
+        <textarea>{{result}}</textarea>
     </div>
 
 </body>
