@@ -1,0 +1,61 @@
+<html  xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    
+    <script type="text/javascript" src="js/angular.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    <script src="https://cdn.bootcss.com/angular-i18n/1.6.0-rc.1/angular-locale_zh-cn.min.js"></script>
+    <script src="https://cdn.bootcss.com/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"></link>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css" />
+    
+    <script>
+        var app = angular.module('bootApp',['ui.bootstrap']);
+        app.controller('msgController',function ($scope){
+            $scope.msg = '哈哈哈哈 ';//父Scope定义msg
+            $scope.$watch('msg',function(newVal,oldVal){//监视msg的变化
+                            if(newVal==oldVal){
+                                console.log('两个值相等');
+                                return;
+                            }
+                            $scope.msg = newVal;
+                            console.log(newVal+'----'+oldVal);
+            })
+           
+        })
+        .directive('showMsg',function(){
+            return{
+                restrict:'A',
+                template:'<h2>{{ickt}}---自定义的指令---{{msgs}}</h2>',
+                scope:{
+                    msgs:'@msgDate'//自定义属性msg-date
+                },
+                controller:function($scope,$element,$attrs){
+                   
+                    $scope.ickt = 'ickt';
+                   // $scope.$apply();
+                },
+                link: function(s, e, a) {
+                    e.bind('click', function() {
+                        alert(s.msgs);
+                        
+                    });
+                }
+            }
+        })
+    
+    </script>
+
+</head>
+
+<body ng-app="bootApp">
+
+    <div ng-controller="msgController">
+        <input type="text" ng-model="msg" />{{msg}}
+        <p msg-date='{{msg}}' show-msg='123'></p>
+    </div>
+
+</body>
+
+</html>
