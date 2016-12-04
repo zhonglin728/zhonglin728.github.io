@@ -63,7 +63,8 @@
                     one.resolve('result-'+$scope.name);  // 声明执行成功，模仿http请求数据成功，可以返回数据了   
                   });
                   //one.reject('error!');  //失败消息这里应该写http 请求失败消息 此处没有写catch
-                },2000);
+                },3000);
+                console.log('a方法执行');
                 return one.promise;//返回数据
               };
 
@@ -76,6 +77,7 @@
                   });
                   //two.reject('error!');  //失败消息
                 },3000);
+                console.log('b方法执行');
                 return two.promise;//返回数据
               };
 
@@ -83,6 +85,7 @@
             var c = function(){//打印消息
                 $scope.name = 'c';
                 three.resolve('result-'+$scope.name);
+                console.log('c方法执行');
                 return three.promise;
             };
             //同步开始 按照限定的顺序执行方法
@@ -93,6 +96,15 @@
             },function(o){
                 
             })
+            //或者像下面的链式调用也可以
+            // b()
+            // .then(function(d){
+            //     c();
+            // },function(e){})
+            // .then(function(f){
+            //     a();
+            // },function(e){});
+
             $scope.$watch('name',function(n,o){//监视name的变化如果变化了及时更新这里写了也是多次一举  据我观察不监控数据 也可以刷新name值得变化
                 if(n==0){
                     return;
