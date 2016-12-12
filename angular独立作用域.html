@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.3/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery-1.8.0.js"></script>
+    <script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript" src="js/jQueryRotate.2.2.js"></script>
+    <script src="https://cdn.bootcss.com/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.3/js/bootstrap.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.3/js/bootstrap.min.js"></script>
+    
+    
+    <script>
+        angular.module("MyApp", [])
+            .controller("MyController", function ($scope) {
+            $scope.names = "钟林";
+            $scope.ages = 25;
+            $scope.changeAgeX = function(haha){
+                alert(haha);
+                $scope.ages = 0;
+            }
+        })
+        .directive("myDirective", function () {
+            return  {
+                restrict: "AE",
+                scope: {
+                    name: '@myName',//单项绑定
+                    age: '=myAge',//双向绑定
+                    changeAge: '&changeMyAge'
+                },
+                replace: true,
+                template: "<div class='my-directive'>" +
+                    "<h3>下面部分是我们创建的指令生成的</h3>" +
+                    "我的名字是：<span ng-bind='name'></span><br/>" +
+                    "我的年龄是：<span ng-bind='age'></span><br/>" +
+                    "在这里修改名字：<input type='text' ng-model='name'><br/>" +
+                    "<button ng-click='changeAge()'>修改年龄</button>" +
+                    " </div>"
+            }
+           
+        });
+    </script>
+
+</head>
+
+
+<body ng-app="MyApp">
+
+
+ <div class="container" ng-controller="MyController">
+        <div class="my-info">我的名字是：<span ng-bind="names"></span>
+            <br/>我的年龄是：<span ng-bind="ages"></span>
+            <br />
+        </div>
+
+        <hr/>
+
+        <my-directive my-name="{{names}}" my-Age="ages"  change-my-age="changeAgeX('方法传参哈哈')"></my-directive>
+
+        
+    </div>
+
+
+</body>
+</html>
