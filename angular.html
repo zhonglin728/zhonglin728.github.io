@@ -87,7 +87,7 @@
                                         var html1 = '<div id="selectUl"><ul>';
                                         var html2 = '';
                                         angular.forEach(scope.tmp,function (n,i){
-                                            html2 = ('<li ng-click="sel($event);">'+n+'</li>') + html2;
+                                            html2 = ('<li class="list-group-item" ng-click="sel($event);">'+n+'</li>') + html2;
                                         })
                                         var html3 = '</ul></div>';
                                         var tpl = $compile(html1+html2+html3)(scope);//再次编译   为动态的事件绑定
@@ -115,7 +115,8 @@
 
                                }else if(event.keyCode == 13){//回车键事件 选中值 清空下拉框
                                   angular.forEach(li,function(n,i){
-                                      if(angular.element(n).attr('active')=='true'){
+                                      scope.$apply(function (){//及时更新值！
+                                           if(angular.element(n).attr('active')=='true'){
                                           //赋值给Input
                                           var enterVal = angular.element(n).html();
                                           scope.userName = enterVal;
@@ -123,8 +124,10 @@
                                           angular.element(document.querySelectorAll("#selectUl")).remove();
                                          
                                       }
+
+                                      })  
                                   })
-                                  scope.$apply();  
+                                  //scope.$apply();  
                                }
 							  
                                 console.log(flag);
@@ -159,11 +162,7 @@
 
   <hr/>下拉框控件支持自动筛选数据  比如输入a将可以看到筛选效果 支持鼠标选择下拉数据 以及方向键控住选择数据
 <select-popup></select-popup>
-<hr>
 
-
-
-<hr/>
 <div style="margin-top:400px;text-align: center;background-color: #9E9E8B;">作者QQ:717543275  小白一枚 纯手写 凭感觉 很多地方有待优化  不喜勿喷 啊哈哈</div>
 
 
