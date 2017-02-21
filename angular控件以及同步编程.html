@@ -55,8 +55,9 @@
            //模仿实际场景比如现在a() b() 为ajax方法需要到后台拿数据,如果不加同步的话代码会跳过ab 先执行c  
            //但是实际上我们需要先拿到a和c的值才能继续下面的操作这里我们就需要用到方法同步了，
            //如果不用同步解决方法可以在http的回调方法success里面写多层代码嵌套，
-              var one = $q.defer(); // 声明2秒延后执行，表示要去监控后面的执行,其实这里的$scope.$apply()没必要写 这里写的目的是为了练习下angular的数据模型监控功能
+             
               var a = function(){
+			  var one = $q.defer(); // 声明2秒延后执行，表示要去监控后面的执行,其实这里的$scope.$apply()没必要写 这里写的目的是为了练习下angular的数据模型监控功能
                   $timeout(function(){//延时2秒显示a
                   $scope.$apply(function(){
                     $scope.name = 'a';
@@ -68,25 +69,27 @@
                 return one.promise;//返回数据
               };
 
-              var two = $q.defer(); // 声明3延后执行，表示要去监控后面的执行,其实这里的$scope.$apply()没必要写 这里写的目的是为了练习下angular的数据模型监控功能
+             
               var b = function(){
+			   var one = $q.defer(); // 声明3延后执行，表示要去监控后面的执行,其实这里的$scope.$apply()没必要写 这里写的目的是为了练习下angular的数据模型监控功能
                   $timeout(function(){//延时2秒显示a
                   $scope.$apply(function(){
                     $scope.name = 'b';
-                    two.resolve('result-'+$scope.name);  // 声明执行成功，模仿http请求数据成功，可以返回数据了   
+                    one.resolve('result-'+$scope.name);  // 声明执行成功，模仿http请求数据成功，可以返回数据了   
                   });
-                  //two.reject('error!');  //失败消息
+                  //one.reject('error!');  //失败消息
                 },3000);
                 console.log('b方法执行');
-                return two.promise;//返回数据
+                return one.promise;//返回数据
               };
 
-            var three = $q.defer();
+            
             var c = function(){//打印消息
+			 var one = $q.defer();
                 $scope.name = 'c';
-                three.resolve('result-'+$scope.name);
+                one.resolve('result-'+$scope.name);
                 console.log('c方法执行');
-                return three.promise;
+                return one.promise;
             };
             //同步开始 按照限定的顺序执行方法
             $q.all([b(),c(),a()]).then(function(res){//同步执行三个方法 默认C 应该会第一个执行 现在加了同步后  按照自定义的顺序执行   b c a
