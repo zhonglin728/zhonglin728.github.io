@@ -50,6 +50,15 @@
             $scope.ismeridian = true;
 
 
+            
+            //select 下拉框组件  2017-2-21 14:20:32
+            $scope.names = [
+                { 'name': '张三', 'ename': 'zhangsan' },
+                { 'name': '张三2', 'ename': 'zhangsan2' },
+                { 'name': '张三3', 'ename': 'zhangsan3' },
+                { 'name': '李四', 'ename': 'lisi' },
+                { 'name': '王五', 'ename': 'wangwu' }
+            ];
 
            //angular同步编程2016-12-4 20:36:32 钟小懒Demo
            //模仿实际场景比如现在a() b() 为ajax方法需要到后台拿数据,如果不加同步的话代码会跳过ab 先执行c  
@@ -179,6 +188,8 @@
  <hr>
 {{results}}
 
+
+        <input type="text" ng-model="selected" uib-typeahead="n.name as n.name+'('+n.ename+')' for n in names | filter:$viewValue | limitTo:8" class="form-control" style="width:161px;">
 
 
 
