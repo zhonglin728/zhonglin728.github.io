@@ -34,7 +34,7 @@
                              },
                              { field: "content",displayName: '内容',width: '70%'},
                              { field: "share_url",displayName: '地址'},
-                             { field: "online_time",displayName: '时间'},
+                             { field: "online_time",displayName: '时间', cellFilter: 'date: "yyyy-MM-dd HH:mm:ss"'},
                              {  
                             field : 'action',  
                             displayName : "操作",  
@@ -314,20 +314,26 @@
         <script type="text/ng-template" id="myModalContent.html">
                     <div ng-model="bootDemo">
                         <div class="modal-header">
-                            <h4 class="modal-title"><span class="glyphicon glyphicon-envelope">{{title}}</h4>
+                            <h4 class="modal-title">
+                                <span class="glyphicon glyphicon-th-list" style="color: rgb(255, 0, 1); font-size: 31px;">{{title}}</span>
+                            </h4>
                         </div>
                         <div class="modal-body">
-                            <a href="#" class="list-group-item active">
-                                <h4 class="list-group-item-heading">
-                                   段子-
-                                </h4>
-                            </a>
-                            <ul class="list-group">
-                                <li class="list-group-item"> {{items.id}}</li>
-                                <li class="list-group-item"> {{items.content}}</li>
-                                <li class="list-group-item"> {{items.share_url}}</li>
-                                <li class="list-group-item"> {{items.online_time | date:'yyyy-MM-dd HH:mm:ss'}}</li>
-                            <ul>
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <h2 class="panel-title">段子</h2>
+                                </div>
+                                <div class="panel-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item"><span class="glyphicon glyphicon-glass" style="color: rgb(255, 0, 1);"></span>&nbsp; {{items.id}}</li>
+                                        <li class="list-group-item"><span class="glyphicon glyphicon-book" style="color: rgb(255, 0, 1);"></span>&nbsp; {{items.content}}</li>
+                                        <li class="list-group-item"><span class="glyphicon glyphicon-link" style="color: rgb(255, 0, 1);"></span>&nbsp; {{items.share_url}}</li>
+                                        <li class="list-group-item"><span class="glyphicon glyphicon-sound-dolby" style="color: rgb(255, 0, 1);"></span>&nbsp; {{items.online_time | date:'yyyy-MM-dd HH:mm:ss'}}</li>
+                                    <ul>
+                                </div>
+                            </div>
+                            
+                           
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary" type="button" ng-click="ok()">确定</button>
@@ -336,13 +342,15 @@
                     </div>
         </script>
 
+
+
         <script type="text/ng-template" id="delModalContent.html">
                     <div ng-model="bootDemo">
                         <div class="modal-header">
                             <h4 class="modal-title"><span class="glyphicon glyphicon-remove">{{title}}</h4>
                         </div>
                         <div class="modal-body">
-                            {{items}}
+                            <span class="glyphicon glyphicon-log-out" style="color: rgb(255, 0, 0);">：</span>{{items}}
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary" type="button" ng-click="ok()">确定</button>
