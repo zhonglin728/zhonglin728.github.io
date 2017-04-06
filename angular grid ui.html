@@ -4,15 +4,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>抓取数据</title>
 
-  
+    <script src="http://baike.baidu.com/wikiui/api/zhixinmap?lemmaId=249243&callback=zhonglinCall"></script>
     <script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
     <script src="https://cdn.bootcss.com/angular-i18n/1.6.0-rc.1/angular-locale_zh-cn.min.js"></script>
     <script src="https://cdn.bootcss.com/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.js"></script>
     <script src="http://cdn.bootcss.com/angular-ui-grid/4.0.2/ui-grid.js"></script>
     <script src="http://cdn.bootcss.com/pdfmake/0.1.26/pdfmake.js"></script>
-    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"></link>
     <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css" />
-    <link href="http://cdn.bootcss.com/angular-ui-grid/4.0.2/ui-grid.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/angular-ui-grid/4.0.2/ui-grid.css" >
     
     <script>
     var app = angular.module('myApp', ['ui.grid','ui.grid.selection','ui.grid.edit',
@@ -277,16 +276,31 @@
 					method:"JSONP",
 					url:"http://baike.baidu.com/api/openapi/BaikeLemmaCardApi?callback=JSON_CALLBACK",
 					params:{"scope":103,"format":"json","appid":379020,"bk_length":6000,"bk_key":$scope.searBaike}
-				  }).success(function (data){
-					$scope.baikes = data;//数据
+				  }).success(function (data,status,config,headers){
+					$scope.baikes = data;//百度百科数据
                     $scope.baikeTitleShow = true;
                     if(angular.equals("",$scope.searBaike)){
                         $scope.baikeTitleShow = false;
                     }
-				  })
-
+				  }).error(function (data,status,config,headers){
+                      console.log(err);
+                  })
              }
-			
+             //作品信息
+             $scope.info = function (lemmaId){
+                $http({
+					method:"JSONP",
+					url:"http://baike.baidu.com/api/wikisecond/modulemedialistsort",
+					params:{"lemmaId":lemmaId,"callback":"JSON_CALLBACK"}
+				}).success(function (data){
+                    console.log(data);
+                }).error(function (data,status,config,headers){
+                    console.log("error"+data);
+                })
+                
+             }
+             
+          
     });
 
     // 详情ModalInstanceCtrl 弹窗controller  
@@ -361,19 +375,27 @@
             <li>
             <li style="float: right;width:78%;">
               <!--百度百科  搜索-->
-                <input type="text" ng-model="searBaike" ng-keyup="searchBaike();" class="form-control">
+                <input type="text" ng-model="searBaike" ng-click="searchBaike();" class="form-control">
                 <!--<input type="text" ng-model="searToutiao" ng-keyup="searchBaike();" uib-typeahead="n for n in dict | filter:$viewValue | limitTo:8" class="form-control">-->
                 <div class="panel panel-success">
                         <div class="panel-heading">
-                            <h2 class="panel-title" ng-if="baikeTitleShow" ng-bind="baikes.abstract"></h2>
-                            <h2 class="panel-title" ng-if="!baikeTitleShow">百度百科搜索结果</h2>
+                            <div class="panel-title" ng-if="!baikeTitleShow">百度百科搜索结果</div>
+                            <div class="panel-title" ng-if="baikeTitleShow" >
+                                <span ng-bind="baikes.abstract"></span>
+                            </div>              
                         </div>
                          <hr/>
                         <div class="panel-body">
                             <ul class="list-group">
-                                <li class="list-group-item" ng-repeat="x in baikes.card">
-                                    <span class="glyphicon glyphicon-fire" style="color: rgb(255, 0, 0);"> {{x.name}}:{{x.value[0]}} </span>
+                                <li class="list-group-item" ng-if="baikes.card.length>0" ng-click="info(baikes.newLemmaId)"><!--图片区域-->
+                                    <span class="glyphicon glyphicon-film" style="color: rgb(255, 0, 0);"> 照片:</span>
+                                    <img style="width: 250px;height: 220px;" ng-src="{{baikes.image}}" class="img-circle">
                                 </li>
+                                <li class="list-group-item" ng-repeat="x in baikes.card"><!--接口数据区域-->
+                                    <span class="glyphicon glyphicon-fire" style="color: rgb(255, 0, 0);"> {{x.name}}: </span>
+                                    <span>{{x.value[0]}}</span>
+                                </li>
+                                {{zhixin}}
                             <ul>
                         </div>
                 </div>        
