@@ -12,7 +12,11 @@
     <script src="http://cdn.bootcss.com/pdfmake/0.1.26/pdfmake.js"></script>
     <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="http://cdn.bootcss.com/angular-ui-grid/4.0.2/ui-grid.css" >
-    
+    <style>
+        .panel-body{
+            background-color: rgba(196, 243, 83, 0.29);
+        }
+    </style>
     <script>
     var app = angular.module('myApp', ['ui.grid','ui.grid.selection','ui.grid.edit',
             'ui.grid.exporter','ui.grid.pagination','ui.grid.resizeColumns','ui.grid.autoResize','ui.bootstrap']);
@@ -53,7 +57,7 @@
                 enablePaginationControls: true, //使用默认的底部分页
                 paginationPageSizes: [10, 11,12,13,14,15,16,17,18,19,20], //每页显示个数可选项
                 paginationCurrentPage:1, //当前页码
-                paginationPageSize: 20, //每页显示个数
+                paginationPageSize: 10, //每页显示个数
                 //paginationTemplate:"<div></div>", //自定义底部分页代码
                 totalItems : 0, // 总数量
                 useExternalPagination: true,//是否使用分页按钮
@@ -254,8 +258,9 @@
 
 
             getPage(1, $scope.gridOptions.paginationPageSize);
-            toutiao();
+            toutiao();//初始化AJAX数据
 			//------------------ 今日头条搜索词汇---------------------------------------
+             document.querySelector("#serToutiao").style.height = 150 + 'px';
 			 $scope.searchToutiaoDict = function (){
                
                 var searUrl = "http://www.toutiao.com/search/sug/?callback=JSON_CALLBACK";
@@ -266,6 +271,11 @@
 					params:{"keyword":key}
 				  }).success(function (data){
 					 $scope.toutiaos = data;
+                     setTimeout(function() {//设置 外层DIV 高度自适应
+                        var liHeight = document.querySelector("#serToutiao li:first-child").offsetHeight;
+                        document.querySelector("#serToutiao").style.height = liHeight + 'px';
+                   }, 200);
+
 				  })
 
 			 }
@@ -279,14 +289,19 @@
 				  }).success(function (data,status,config,headers){
 					$scope.baikes = data;//百度百科数据
                     $scope.baikeTitleShow = true;
-                    if(angular.equals("",$scope.searBaike)){
+                    if(angular.equals("",$scope.searBaike) || angular.isUndefined($scope.searBaike)){
                         $scope.baikeTitleShow = false;
                     }
+                   setTimeout(function() {//设置 外层DIV 高度自适应
+                        var liHeight = document.querySelector("#serToutiao li:last-child").offsetHeight;
+                        document.querySelector("#serToutiao").style.height = liHeight + 'px';
+                   }, 200);
+                   
 				  }).error(function (data,status,config,headers){
                       console.log(err);
                   })
              }
-             //作品信息
+             //作品信息  接口返回HTML格式 无法接收。
              $scope.info = function (lemmaId){
                 $http({
 					method:"JSONP",
@@ -299,7 +314,72 @@
                 })
                 
              }
-             
+
+             //显示今日头条推荐数据
+             $scope.tuiJian = function (){
+                    $http({
+					method:"JSONP",
+					url:"http://www.toutiao.com/api/pc/feed/",
+					params:{
+                        "category":"__all__",
+                        "utm_source":"toutiao",
+                        "widen":1,
+                        "max_behot_time":0,
+                        "max_behot_time_tmp":0,
+                        "tadrequire":true,
+                        "as":"A165188EF790386",
+                        "cp":"58E7D0B348B66E1",
+                        "callback":"JSON_CALLBACK"
+                        }
+				}).success(function (data){
+                    $scope.tuijian = data;
+                }).error(function (data,status,config,headers){
+                    console.log("error"+data);
+                })
+             }
+            //初始化 数据
+            $scope.tuiJian()
+             //显示评论信息  http://www.toutiao.com/api/comment/list/
+             $scope.pinlun = function(id,title){
+                    $http({
+					method:"JSONP",
+					url:"http://www.toutiao.com/api/comment/list/",
+					params:{
+                       "group_id":id,
+                        "item_id":"6406076667583791617",
+                        "offset":0,
+                        "count":1000,
+                        "callback":"JSON_CALLBACK"
+                        }
+				}).success(function (data){
+                    console.log(data);
+                    var msg = new Object();
+                    msg.title = "评论......";
+                    msg.context = data;
+                    msg.firstTitle = title;
+                    var par = {
+                                msgFun: function () {
+                                    return msg;
+                                }
+                            }
+                        var modalInstance = $uibModal.open({
+                        templateUrl: 'pinLunModalContent.html',
+                        controller: 'pinLunModalCtrl',
+                        backdrop: "static",
+                        animation:true,
+                        size: 'lg',
+                        resolve: par
+                        });
+                        modalInstance.result.then(function (selectedItem) {
+                            $scope.selected = selectedItem;
+                        }, function () {
+                            $log.info('Modal dismissed at: ' + new Date());
+                        });
+                }).error(function (data,status,config,headers){
+                    console.log("error"+data);
+                })
+             }
+
           
     });
 
@@ -327,16 +407,25 @@
                 $uibModalInstance.dismiss('cancel');
             };
     });
+    // 显示评论ModalInstanceCtrl 弹窗controller  
+        app.controller('pinLunModalCtrl', function ($scope, $uibModalInstance, msgFun) {
+            var vm = this;
+            $scope.pItem = msgFun.context;
+            $scope.pTitle = msgFun.title;
+            $scope.firstTitle = msgFun.firstTitle;
+            $scope.ok = function () {
+                $uibModalInstance.dismiss('cancel');
+            };
+            $scope.cancel = function () {
+                $uibModalInstance.dismiss('cancel');
+            };
+    });
 
     </script>
 
 </head>
 <body ng-controller="MyCtrl">
-        
-        <a href="#" class="btn btn-info btn-lg" ng-click="search();">
-          <span class="glyphicon glyphicon-download"></span> 点击-抓取今日头条内涵段子数据
-        </a>
-
+        <button type="button" ng-click="search();" class="btn btn-primary btn-lg btn-block" style="margin-top:20px;">点击-抓取今日头条内涵段子数据</button>
         <hr/>
 
         <div  ui-grid="gridOptions" style="width: 100%; height: 700px; text-align: center;color: #F57303;"
@@ -353,55 +442,84 @@
 				 <li>时间：{{testRow.online_time}}</li>
              </ul>   
         </div>
+        
+        
+            <ul id="serToutiao" style="list-style:none;border:1px dashed  #e0bd10;width:95%;margin: 0px auto;">
+                <li style="float: left;width:20%">
+                    <!--头条关键字 搜索-->
+                    <input type="text" ng-model="searToutiao" ng-keyup="searchToutiaoDict();" class="form-control" placeholder="请输入搜索关键字">
+                    <!--<input type="text" ng-model="searToutiao" ng-keyup="searchToutiaoDict();" uib-typeahead="n for n in dict | filter:$viewValue | limitTo:8" class="form-control">-->
+                    <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h2 class="panel-title">今日头条搜索结果</h2>
+                            </div>
+                           
+                            <div class="panel-body">
+                                <ul class="list-group">
+                                    <li class="list-group-item" ng-repeat="x in toutiaos.data">
+                                        <span class="glyphicon glyphicon-fire" style="color: rgb(255, 0, 0);"> {{x}}</span>
+                                    </li>
+                                <ul>
+                            </div>
+                    </div>
+                <li>
+                <li style="float: right;width:78%;">
+                <!--百度百科  搜索-->
+                    <input type="text" ng-model="searBaike" ng-keyup="searchBaike();" class="form-control" placeholder="请输入搜索关键字">
+                    <!--<input type="text" ng-model="searToutiao" ng-keyup="searchBaike();" uib-typeahead="n for n in dict | filter:$viewValue | limitTo:8" class="form-control">-->
+                    <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <div class="panel-title" ng-if="!baikeTitleShow">百度百科搜索结果</div>
+                                <div class="panel-title" ng-if="baikeTitleShow" >
+                                    <span ng-bind="baikes.abstract"></span>
+                                </div>              
+                            </div>
+                            
+                            <div class="panel-body">
+                                <ul class="list-group">
+                                    <li class="list-group-item" ng-if="baikes.card.length>0" ng-click="info(baikes.newLemmaId)"><!--图片区域-->
+                                        <span class="glyphicon glyphicon-film" style="color: rgb(255, 0, 0);"> 照片:</span>
+                                        <img style="width: 250px;height: 220px;" ng-src="{{baikes.image}}" class="img-circle">
+                                    </li>
+                                    <li class="list-group-item" ng-repeat="x in baikes.card"><!--接口数据区域-->
+                                        <span class="glyphicon glyphicon-fire" style="color: rgb(255, 0, 0);"> {{x.name}}: </span>
+                                        <span>{{x.value[0]}}</span>
+                                    </li>
+                                    {{zhixin}}
+                                <ul>
+                            </div>
+                    </div>        
+                </li>
+            </ul>
 
-        <ul style="list-style:none;">
-            <li style="float: left;width:20%">
-                <!--头条关键字 搜索-->
-                <input type="text" ng-model="searToutiao" ng-keyup="searchToutiaoDict();" class="form-control">
-                <!--<input type="text" ng-model="searToutiao" ng-keyup="searchToutiaoDict();" uib-typeahead="n for n in dict | filter:$viewValue | limitTo:8" class="form-control">-->
-                <div class="panel panel-success">
-                        <div class="panel-heading">
-                            <h2 class="panel-title">今日头条搜索结果</h2>
-                        </div>
-                        <hr/>
-                        <div class="panel-body">
-                            <ul class="list-group">
-                                <li class="list-group-item" ng-repeat="x in toutiaos.data">
-                                    <span class="glyphicon glyphicon-fire" style="color: rgb(255, 0, 0);"> {{x}}</span>
-                                </li>
-                            <ul>
-                        </div>
-                </div>
-            <li>
-            <li style="float: right;width:78%;">
-              <!--百度百科  搜索-->
-                <input type="text" ng-model="searBaike" ng-click="searchBaike();" class="form-control">
-                <!--<input type="text" ng-model="searToutiao" ng-keyup="searchBaike();" uib-typeahead="n for n in dict | filter:$viewValue | limitTo:8" class="form-control">-->
-                <div class="panel panel-success">
-                        <div class="panel-heading">
-                            <div class="panel-title" ng-if="!baikeTitleShow">百度百科搜索结果</div>
-                            <div class="panel-title" ng-if="baikeTitleShow" >
-                                <span ng-bind="baikes.abstract"></span>
-                            </div>              
-                        </div>
-                         <hr/>
-                        <div class="panel-body">
-                            <ul class="list-group">
-                                <li class="list-group-item" ng-if="baikes.card.length>0" ng-click="info(baikes.newLemmaId)"><!--图片区域-->
-                                    <span class="glyphicon glyphicon-film" style="color: rgb(255, 0, 0);"> 照片:</span>
-                                    <img style="width: 250px;height: 220px;" ng-src="{{baikes.image}}" class="img-circle">
-                                </li>
-                                <li class="list-group-item" ng-repeat="x in baikes.card"><!--接口数据区域-->
-                                    <span class="glyphicon glyphicon-fire" style="color: rgb(255, 0, 0);"> {{x.name}}: </span>
-                                    <span>{{x.value[0]}}</span>
-                                </li>
-                                {{zhixin}}
-                            <ul>
-                        </div>
-                </div>        
-            </li>
-        </ul>
-
+       <hr/>
+    <!--刷新今日头条推荐数据-->
+    <button type="button" ng-click="tuiJian();" class="btn btn-primary btn-lg btn-block" style="margin-top:20px;">刷新今日头条推荐数据</button>
+    <table class="table table-bordered table-hover"  style="margin-top:10px;">
+            <tr ng-if="tuijian.data.length>0">
+                <th>ID</th>
+                <th>标题</th>
+                <th>类型</th>
+                <th>内容</th>
+                <th>图片</th>
+            </tr>
+            <tr ng-repeat="t in tuijian.data" uib-tooltip="点击查看详细评论" ng-click="pinlun(t.group_id,t.title);">
+                <td>{{t.group_id}}</td>
+                <td>{{t.title}}</td>
+                <td>{{t.chinese_tag}}</td>
+                <td>{{t.abstract}}</td>
+                <td>
+                     <img style="width: 100px;height: 100px;" ng-src="{{t.image_url}}" class="img-rounded">
+                </td>
+            </tr>
+    </table>
+<!--<div class="progress">
+	<div class="progress-bar progress-bar-success" role="progressbar"
+		 aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+		 style="width: 90%;">
+		<span class="sr-only">90% 完成（成功）</span>
+	</div>
+</div>-->
         <!--数据详情页面-->
         <script type="text/ng-template" id="myModalContent.html">
                     <div ng-model="bootDemo">
@@ -450,6 +568,40 @@
                         </div>
                     </div>
         </script>
+
+
+        <!--显示评论详情页面-->
+        <script type="text/ng-template" id="pinLunModalContent.html">
+                    <div ng-model="bootDemo">
+                        <div class="modal-header">
+                            <h4 class="modal-title">
+                                <span class="glyphicon glyphicon-th-list" style="color: rgb(255, 0, 1); font-size: 31px;">{{pTitle}}</span>
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <h2 class="panel-title">{{firstTitle}}【{{pItem.data.total}}】</h2>
+                                </div>
+                                <div class="panel-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" ng-repeat="t in pItem.data.comments">
+                                            <span class="glyphicon glyphicon-pencil" style="color: rgb(255, 17, 3);">{{$index+1}}内容:</span>&nbsp; {{t.text}}<br/>
+                                            <span class="glyphicon glyphicon-book" style="color: rgb(255, 1, 3);">评论人：</span>&nbsp; 
+                                            <img style="width: 50px;height: 50px;" ng-src="{{t.user.avatar_url}}" class="img-circle">
+                                            {{t.user.name}}
+                                        </li>
+                                    <ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" type="button" ng-click="ok()">确定</button>
+                            <button class="btn btn-warning" type="button" ng-click="cancel()">取消</button>
+                        </div>
+                    </div>
+        </script>
+
 
     </body>
 </html>
