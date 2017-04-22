@@ -16,6 +16,16 @@
         .panel-body{
             background-color: rgba(196, 243, 83, 0.29);
         }
+        #titlePhone{
+              /*border:1px dashed #F00;*/
+              text-align: center;
+              width:95%;
+              margin: 0px auto;
+              margin-top: 10px;
+        }
+        #titlePhone img{
+           margin-left: 10px;
+        }
     </style>
     <script>
     var app = angular.module('myApp', ['ui.grid','ui.grid.selection','ui.grid.edit',
@@ -380,6 +390,17 @@
                 })
              }
 
+             //左右选择框Demo
+             $scope.leftSelect = ['十堰','襄阳','宜昌','武汉','黄石','孝感','锦州','汉口','郧西','河夹镇','大屏','小乔'];
+             $scope.rightSelect = ['钟林','郭绣涛'];
+             $scope.leftCheck = function (l,i){
+                //$scope.leftSelect.splice(i,1);
+                $scope.rightSelect.push(l);//移动数据到右边
+             }
+             $scope.rightCheck = function (l,i){
+                 $scope.rightSelect.splice(i,1);//删除数据
+                 //$scope.leftSelect.push(l);
+             }
           
     });
 
@@ -425,7 +446,18 @@
 
 </head>
 <body ng-controller="MyCtrl">
+
+        <div id="titlePhone">
+             <img style="width: 200px;height: 200px;" ng-src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1491591185517&di=af1d6ada4b36fbcb2337b1d3e099320a&imgtype=0&src=http%3A%2F%2Fwww.nongshanghang.cn%2Fyule%2Fuploads%2Fallimg%2F161230%2F154P43245_0.jpg" class="img-circle">
+             <img style="width: 200px;height: 200px;" ng-src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1491591383379&di=5242060955b4e695817f66e3065c89a7&imgtype=0&src=http%3A%2F%2Fimg.guatian.com%2FUpload%2Fimage%2F20170214%2F58a2c2e68d535.jpeg" class="img-circle">
+             <img style="width: 200px;height: 200px;" ng-src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1491591447751&di=50be48c920e9ec0b511755a1ffc216ae&imgtype=0&src=http%3A%2F%2Fimage.zzd.sm.cn%2F16971519320643245531.jpg%3Fid%3D0" class="img-circle">
+             <img style="width: 200px;height: 200px;" ng-src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1491591516826&di=c13476ab32ef3b960a42edf87cfbf536&imgtype=0&src=http%3A%2F%2Fimg.qhdxw.com%2Fhot%2Fuploads%2Fallimg%2F20170220%2F114740_17650.jpg" class="img-circle">
+             <img style="width: 200px;height: 200px;" ng-src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1491591578386&di=4121f9077811f204fd132b240e288bf8&imgtype=jpg&src=http%3A%2F%2Fimg1.imgtn.bdimg.com%2Fit%2Fu%3D3943879384%2C1831083696%26fm%3D214%26gp%3D0.jpg" class="img-circle">
+             <img style="width: 200px;height: 200px;" ng-src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1491591739749&di=14f66b26ff05e1ccb353de541d6681c1&imgtype=0&src=http%3A%2F%2Fwww.ozkxaye.net%2Fimgall%2Fmfygsltvobwg6ylegmxha2lnm4xgg3q%2Fuser_upload%2Fef49750bba4b420183e603a6e04cb780.jpeg_thumb_750x%253E_quality_95_.jpeg" class="img-circle">
+        </div>
+
         <button type="button" ng-click="search();" class="btn btn-primary btn-lg btn-block" style="margin-top:20px;">点击-抓取今日头条内涵段子数据</button>
+
         <hr/>
 
         <div  ui-grid="gridOptions" style="width: 100%; height: 700px; text-align: center;color: #F57303;"
@@ -495,7 +527,7 @@
        <hr/>
     <!--刷新今日头条推荐数据-->
     <button type="button" ng-click="tuiJian();" class="btn btn-primary btn-lg btn-block" style="margin-top:20px;">刷新今日头条推荐数据</button>
-    <table class="table table-bordered table-hover"  style="margin-top:10px;">
+    <table class="table table-bordered table-hover"  style="margin-top:10px;width:96%;margin:0px auto;">
             <tr ng-if="tuijian.data.length>0">
                 <th>ID</th>
                 <th>标题</th>
@@ -513,6 +545,21 @@
                 </td>
             </tr>
     </table>
+
+    <!--左右筛选Demo-->
+    <div style="width:250px;height:200px;position:relative;float:left;margin-top:10px;">
+    <ul class="list-group">
+        <li class="list-group-item" ng-repeat="left in leftSelect" ng-dblclick="leftCheck(left,$index)" uib-tooltip="双击选项左边数据到右边！"><span class="glyphicon glyphicon-glass" style="color: rgb(255, 0, 1);"></span>&nbsp; {{left}}</li>
+     <ul>
+    </div>
+
+    <div style="width:250px;height:200px;position:relative;float:left;margin-left:10px;margin-top:10px;">
+    <ul class="list-group">
+        <li class="list-group-item" ng-repeat="right in rightSelect" ng-dblclick="rightCheck(right,$index)"><span class="glyphicon glyphicon-glass" style="color: rgb(255, 0, 1);"></span>&nbsp; {{right}}</li>
+     <ul>
+          {{rightSelect}}
+    </div>
+   
 <!--<div class="progress">
 	<div class="progress-bar progress-bar-success" role="progressbar"
 		 aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
